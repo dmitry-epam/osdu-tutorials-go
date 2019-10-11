@@ -35,9 +35,6 @@ func main() {
 	log.Printf("Initialized well request: \n%s", wellReq)
 
 	// search handler takes "wellname" as input parameter and makes Search API call to find the well
-=======
-	// search handler takes "wellname" as input parameters and makes Search API call to find the well
->>>>>>> d11fa3fd404ec90f532957caa1b85204c8d61617
 	http.HandleFunc("/search", func(w http.ResponseWriter, r *http.Request) {
 		wellName := r.URL.Query().Get("wellname")
 
