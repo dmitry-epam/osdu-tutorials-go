@@ -1,0 +1,12 @@
+{
+    "fulltext": "A05-01",
+    "metadata": {
+        "resource_type": [
+            "master-data/well",
+            "work-product-component/wellog"
+        ]
+    },
+    "facets": [
+        "resource_type"
+    ]
+}

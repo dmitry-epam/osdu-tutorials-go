@@ -26,8 +26,9 @@ func main() {
 		ClientID:     "yourClientID",
 		ClientSecret: "yourClientSecret",
 		Endpoint:     provider.Endpoint(),
-		RedirectURL:  "http://localhost:8080/auth/callback",          // this will be the handler after the sign-in
-		Scopes:       []string{oidc.ScopeOpenID, "profile", "email"}, // ["openid","profile","email","offline_access"]
+		RedirectURL:  "http://localhost:8080/auth/callback",
+		// "openid" is a required scope for OpenID Connect flows
+		Scopes:       []string{oidc.ScopeOpenID, "profile", "email"},
 	}
 
 	state := "foobar" // this is typically the page or tab a user was on before the sign-in
