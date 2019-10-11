@@ -34,7 +34,6 @@ func main() {
 
 	log.Printf("Initialized well request: \n%s", wellReq)
 
-<<<<<<< HEAD
 	// search handler takes "wellname" as input parameter and makes Search API call to find the well
 =======
 	// search handler takes "wellname" as input parameters and makes Search API call to find the well
