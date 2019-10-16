@@ -2,8 +2,9 @@
     "fulltext": "A05-01",
     "metadata": {
         "resource_type": [
-            "master-data/well",
-            "work-product-component/wellog"
+            "master-data/Well",
+            "work-product-component/WellLog",
+            "work-product-component/WellborePath"
         ]
     },
     "facets": [

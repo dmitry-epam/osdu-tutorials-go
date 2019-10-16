@@ -1,0 +1,24 @@
+{
+    "master-data/Well": [
+        {
+            "filename": "las2:.a05-01-log-8438",
+            "srn": "srn:file/las2:83120238df6f11e9b5dfb1a6ac04af7f:1"
+        },
+        {
+            "filename": "csv:.8438-csv-8438",
+            "srn": "srn:file/csv:6dd13750df8611e9b5df4fa704076d5c:1"
+        }
+    ],
+    "work-product-component/WellLog": [
+        {
+            "filename": "las2:.a05-01-log-8438",
+            "srn": "srn:file/las2:83120238df6f11e9b5dfb1a6ac04af7f:1"
+        }
+    ],
+    "work-product-component/WellborePath": [
+        {
+            "filename": "csv:.8438-csv-8438",
+            "srn": "srn:file/csv:6dd13750df8611e9b5df4fa704076d5c:1"
+        }
+    ]
+}

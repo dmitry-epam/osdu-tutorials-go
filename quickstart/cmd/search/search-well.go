@@ -7,21 +7,44 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"log"
 	"net/http"
 )
 
-const API_BASE_URL = "https://osdu-demo-portal-dev.azure-api.net"
+const API_BASE_URL = "<your API base url here>" // https://osdu-demo-dev.azure-api.net
 
+// extracts files and srns for each resource type from response
+// body and strips out everything else
+func getFilesFromResults(responseBody []byte) map[string][]interface{} {
 
-// TO DO
-// this is a stub to parse SRNs out of search response
-func parseBody(responseBody []byte, resourceType []string) []string {
-	
-	log.Printf("Parsing resource types: %s\n", resourceType)
+	type FileStruct struct {
+		Filename string `json:"filename"`
+		Srn      string `json:"srn"`
+	}
 
-	SRNs := []string{"srn:master-data/Wellbore:8438:", "srn:work-product-component/WellborePath:8438_csv:", "srn:file/csv:6dd13750df8611e9b5df4fa704076d5c:1"}
+	// create a map to hold parsed files and srns
+	SRNs := map[string][]interface{}{}
+
+	// iterate over an array of search results
+	result := gjson.Get(string(responseBody), "results")
+	result.ForEach(func(key, value gjson.Result) bool {
+		// each resource type will contain one or more file structs
+		mapKey := gjson.Get(value.String(), "resource_type").String()
+		mapValues := gjson.Get(value.String(), "files").Array()
+		// iterate over an array of files to extract filename and srn
+		for _, v := range mapValues {
+			var fileStruct FileStruct
+			fileStruct.Filename = v.Get("filename").String()
+			fileStruct.Srn = v.Get("srn").String()
+			// add new file with its srn to resource type
+			SRNs[mapKey] = append(SRNs[mapKey], fileStruct)
+			log.Printf("Adding value: %s\n", fileStruct)
+		}
+		return true // keep iterating
+	})
+
 	return SRNs
 }
 
@@ -41,7 +64,7 @@ func main() {
 	// construct an initial well search request
 	wellReq := SearchRequest{
 		FullText: "*",
-		Metadata: Metadata{ResourceType: []string{"master-data/well", "work-product-component/welllog"}},
+		Metadata: Metadata{ResourceType: []string{"master-data/Well", "work-product-component/WellLog", "work-product-component/WellborePath"}},
 		Facets:   []string{"resource_type"},
 	}
 
@@ -49,7 +72,7 @@ func main() {
 
 	// find handler takes "wellname" as input parameter and makes Search API call to find the well
 	http.HandleFunc("/find", func(w http.ResponseWriter, r *http.Request) {
-		
+
 		wellName := r.URL.Query().Get("wellname")
 
 		// assign the search term to be a well passed to a handler
@@ -70,13 +93,15 @@ func main() {
 		}
 		body, err := ioutil.ReadAll(resp.Body)
 
-		SRNs := parseBody(body, wellReq.Metadata.ResourceType)
+		// parse the results and extract files/srns for each resource type
+		SRNs := getFilesFromResults(body)
+		resJSON, err := json.Marshal(SRNs)
+		if err != nil {
+			log.Printf("Marshalling result JSON failed with %s", err)
+		}
 
 		// return response JSON back to browser
-		for _, srn := range SRNs {
-			fmt.Fprintln(w, srn)	
-		}
-		//fmt.Fprintf(w, SRNs[0])
+		fmt.Fprintf(w, string(resJSON))
 	})
 
 	log.Printf("listening on http://%s/", "127.0.0.1:8080")
