@@ -50,14 +50,14 @@ func getFileURL(body []byte) string {
 	to an in-memory buffer, do not use in prod
 	since buffer can fail to grow
 */
-func getBufFromBlob(remoteFileURI string) []byte {
+func getBufFromBlob(remoteFileURL string) []byte {
 
 	ctx := context.Background()
 
 	var err error
 
 	// When someone receives the URL, they access the SAS-protected resource with code like this:
-	u, _ := url.Parse(remoteFileURI)
+	u, _ := url.Parse(remoteFileURL)
 
 	// Create an BlobURL object that wraps the blob URL (and its SAS) and a pipeline.
 	// When using a SAS URLs, anonymous credentials are required.
@@ -102,23 +102,25 @@ func main() {
 		TargetRegionID string
 	}
 
-	// find handler takes "wellname" as input parameter and makes Search API call to find the well
+	// find handler takes "srn" as input parameter and makes Delivery API call
+	// to get the pre-signed File URL to download
 	http.HandleFunc("/fetch", func(w http.ResponseWriter, r *http.Request) {
 
 		SRN := r.URL.Query().Get("srn")
 
-		// assign the search parameter to SRN that is passed
+		// assign the search parameter to SRN that is passed;
+		// we can pass multiple SRNs if needed, just append them all
 		var fileReq FileRequest
 		fileReq.SRNS = append(fileReq.SRNS, SRN)
 
-		// prepare request JSON from well request struct
+		// prepare request JSON from file request struct
 		buf, err := json.Marshal(fileReq)
 		if err != nil {
 			log.Printf("Error creating JSON: %s", err)
 		}
 		log.Printf("Request JSON: %s", buf)
 
-		// call Search API with the well search request JSON
+		// call Delivery API with the file search request JSON
 		resp, err := http.Post(API_BASE_URL+"/GetResources", "application/json", bytes.NewBuffer(buf))
 		if err != nil {
 			log.Printf("HTTP request failed with %s", err)
