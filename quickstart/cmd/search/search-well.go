@@ -1,5 +1,8 @@
 /*
 This is an example application to demonstrate querying the Search API.
+
+It uses unsecured API - check /auth folder to see
+how to implement authentication based on OpenID Connect
 */
 package main
 
@@ -13,7 +16,7 @@ import (
 	"net/http"
 )
 
-const API_BASE_URL = "<your API base url here>" // https://osdu-demo-dev.azure-api.net
+const API_BASE_URL = "<your API base url here>"
 
 // extracts files and srns for each resource type from response
 // body and strips out everything else
@@ -30,17 +33,22 @@ func getFilesFromResults(responseBody []byte) map[string][]interface{} {
 	// iterate over an array of search results
 	result := gjson.Get(string(responseBody), "results")
 	result.ForEach(func(key, value gjson.Result) bool {
+
 		// each resource type will contain one or more file structs
 		mapKey := gjson.Get(value.String(), "resource_type").String()
 		mapValues := gjson.Get(value.String(), "files").Array()
+
 		// iterate over an array of files to extract filename and srn
 		for _, v := range mapValues {
+
 			var fileStruct FileStruct
 			fileStruct.Filename = v.Get("filename").String()
 			fileStruct.Srn = v.Get("srn").String()
+
 			// add new file with its srn to resource type
 			SRNs[mapKey] = append(SRNs[mapKey], fileStruct)
 			log.Printf("Adding value: %s\n", fileStruct)
+
 		}
 		return true // keep iterating
 	})
@@ -54,6 +62,7 @@ func main() {
 	type Metadata struct {
 		ResourceType []string `json:"resource_type"`
 	}
+
 	// search request struct
 	type SearchRequest struct {
 		FullText string   `json:"fulltext"`

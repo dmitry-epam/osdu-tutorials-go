@@ -36,7 +36,7 @@ func main() {
 	}
 
 	// this is typically the page a user was on
-	// before the sign-in process
+	// before the sign-in process, otherwise a random string
 	state := "foobar"
 
 	// this handler initiates the sign-in process by redirecting
@@ -50,6 +50,7 @@ func main() {
 	// clientId/clientSecret; and finally, extracts user info from the id_token
 	// and returns everything back to browser
 	http.HandleFunc("/auth/callback", func(w http.ResponseWriter, r *http.Request) {
+
 		if r.URL.Query().Get("state") != state {
 			http.Error(w, "state did not match", http.StatusBadRequest)
 			return

@@ -1,0 +1,16 @@
+{
+    "UnprocessedSRNs": [],
+    "Result": [
+        {
+            "FileLocation": {
+                "Bucket": "tno",
+                "TemporaryCredentials": {
+                    "SAS": "REDACTED"
+                },
+                "EndPoint": "https://osdudemodata.blob.core.windows.net/",
+                "Key": "data/trajectories/8438.csv"
+            },
+            "SRN": "srn:file/csv:6dd13750df8611e9b5df4fa704076d5c:1"
+        }
+    ]
+}

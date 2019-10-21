@@ -12,4 +12,4 @@
 *.out
 
 # Config Values
-config-*.txt
+config-*.cfg
