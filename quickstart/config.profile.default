@@ -1,7 +1,0 @@
-# OAuth settings
-export OSDU_CLIENT_ID="<your-client-id>"
-export OSDU_CLIENT_SECRET="<your-client-secret>"
-export OSDU_AUTH_BASE_URL="<auth-server-url>"
-
-# API
-export OSDU_API_BASE_URL="<api-base-url>"

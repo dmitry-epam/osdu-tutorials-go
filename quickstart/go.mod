@@ -1,4 +1,4 @@
-module github.com/dmitry-epam/osdu-tutorials-go
+module github.com/dmitry-epam/osdu-tutorials-go/quickstart
 
 go 1.13
 
