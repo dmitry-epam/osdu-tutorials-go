@@ -1,0 +1,10 @@
+version : '3'
+services:
+  backend:
+    env_file:
+      - config-<your-env>.env
+    build: .
+    ports:
+      - "8080:8080"
+    command: /root/main
+    

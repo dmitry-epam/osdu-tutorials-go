@@ -210,12 +210,6 @@ func main() {
 			return
 		}
 
-/* 		refreshToken, ok := oauth2Token.Extra("refresh_token").(string)
-		if !ok {
-			http.Error(w, "No refresh_token field in oauth2 token.", http.StatusInternalServerError)
-			return
-		} */
-
 		userInfo, err := provider.UserInfo(ctx, oauth2.StaticTokenSource(oauth2Token))
 		if err != nil {
 			http.Error(w, "Failed to get userinfo: "+err.Error(), http.StatusInternalServerError)
@@ -227,6 +221,7 @@ func main() {
 			UserInfo    *oidc.UserInfo
 			IDToken string `json:"id_token"`
 		}{oauth2Token, userInfo, IDToken}
+		
 		data, err := json.MarshalIndent(resp, "", "    ")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
